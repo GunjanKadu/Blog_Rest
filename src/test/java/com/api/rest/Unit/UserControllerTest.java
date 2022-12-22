@@ -1,5 +1,6 @@
-package com.api.rest;
+package com.api.rest.Unit;
 
+import com.api.rest.BlogUser;
 import com.api.rest.controllers.UserController;
 import com.api.rest.services.UserService;
 import org.assertj.core.api.Assertions;
@@ -50,5 +51,4 @@ public class UserControllerTest {
         ResponseEntity<BlogUser> user = userController.getUser(1L);
         Assertions.assertThat(user.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
-
 }

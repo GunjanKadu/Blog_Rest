@@ -1,4 +1,6 @@
-package com.api.rest;
+package com.api.rest.Unit;
+
+import com.api.rest.BlogUser;
 
 public class Fixtures {
 
