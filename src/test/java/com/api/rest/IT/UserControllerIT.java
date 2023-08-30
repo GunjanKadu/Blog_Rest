@@ -2,7 +2,6 @@ package com.api.rest.IT;
 
 import com.api.rest.BlogUser;
 import com.api.rest.controllers.UserController;
-import com.api.rest.interfaces.IUserService;
 import com.api.rest.repositories.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -59,6 +58,5 @@ public class UserControllerIT {
         ResponseEntity<BlogUser> user = userController.getUser(1L);
         Assertions.assertThat(user.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
-
 
 }

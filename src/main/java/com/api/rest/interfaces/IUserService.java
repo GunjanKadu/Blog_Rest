@@ -11,4 +11,5 @@ public interface IUserService {
 
     Optional<BlogUser> getUser(Long id);
 
+    BlogUser createUser(BlogUser user);
 }

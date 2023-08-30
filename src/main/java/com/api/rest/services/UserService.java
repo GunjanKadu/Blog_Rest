@@ -24,4 +24,9 @@ public class UserService implements IUserService {
     public Optional<BlogUser> getUser(Long id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public BlogUser createUser(BlogUser user) {
+        return userRepository.save(user);
+    }
 }
