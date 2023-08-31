@@ -1,15 +1,18 @@
 package com.api.rest;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import java.util.Base64;
 
 @Entity
+@Table(name="blogUser",uniqueConstraints=@UniqueConstraint(columnNames={"email"}))
+
 public class BlogUser {
 
     @Id
@@ -18,7 +21,6 @@ public class BlogUser {
 
     private String firstName;
     private String lastName;
-
     private String email;
 
     private String password;

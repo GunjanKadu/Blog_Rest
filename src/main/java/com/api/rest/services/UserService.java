@@ -29,4 +29,14 @@ public class UserService implements IUserService {
     public BlogUser createUser(BlogUser user) {
         return userRepository.save(user);
     }
+
+    @Override
+    public Optional<BlogUser> getUserByEmail(String email) {
+        Optional<BlogUser> blogUser = userRepository.findByEmail(email);
+        if (blogUser.isPresent()) {
+            return blogUser;
+        }
+        return null;
+    }
+
 }
