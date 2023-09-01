@@ -1,20 +1,26 @@
 package com.api.rest;
 
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import java.util.Base64;
+import java.util.Collection;
+import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name="blogUser",uniqueConstraints=@UniqueConstraint(columnNames={"email"}))
-
-public class BlogUser {
-
+public class BlogUser implements UserDetails {
     @Id
     @GeneratedValue
     private Long id;
@@ -22,28 +28,15 @@ public class BlogUser {
     private String firstName;
     private String lastName;
     private String email;
-
     private String password;
     private int age;
 
-    public BlogUser() {
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public String decodedPassword() {
         byte[] decodedPasswordBytes = Base64.getDecoder().decode(this.password);
         return new String(decodedPasswordBytes);
-    }
-
-    public String password() {
-        return this.password;
     }
 
     public void setPassword(String password) {
@@ -51,48 +44,38 @@ public class BlogUser {
         ;
     }
 
-    public BlogUser(Long id, String firstName, String lastName, int age) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public BlogUser(String firstName, String lastName, int age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
+    @Override
+    public String getPassword() {
+        return null;
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getFirstName() {
-        return firstName;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

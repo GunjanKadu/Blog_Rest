@@ -24,7 +24,7 @@ public class LoginController {
     public void login(@RequestBody HashMap<String,String> credentials){
         String email = credentials.get("email");
         String password = credentials.get("password");
-
+        //TODO implement Login
 
     }
 }
