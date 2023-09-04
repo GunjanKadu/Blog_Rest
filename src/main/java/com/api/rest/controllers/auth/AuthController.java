@@ -1,13 +1,12 @@
 package com.api.rest.controllers.auth;
 
+import com.api.rest.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -17,14 +16,6 @@ public class AuthController {
 
     public AuthController(@Autowired AuthenticationService service) {
         this.service = service;
-    }
-
-    @PostMapping
-    public void login(@RequestBody HashMap<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
-        //TODO implement Login
-
     }
 
     @PostMapping("/register")
