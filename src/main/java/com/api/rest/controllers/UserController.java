@@ -45,9 +45,9 @@ public class UserController implements IUserController {
 
     @PostMapping
     public ResponseEntity<BlogUser> createUser(@RequestBody BlogUser user) {
-        Optional<BlogUser> existingUser = userService.getUserByEmail(user.getEmail());
+        Optional<BlogUser> existingUser = userService.getUserByEmail(user.getUsername());
         if (existingUser != null && existingUser.isPresent()) {
-            throw new ApiRequestException(String.format("User with email %s already exists",existingUser.get().getEmail()));
+            throw new ApiRequestException(String.format("User with email %s already exists",existingUser.get().getUsername()));
         }
         BlogUser createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.OK);
