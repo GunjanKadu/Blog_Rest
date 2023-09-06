@@ -1,7 +1,7 @@
 package com.api.rest.IT;
 
 import com.api.rest.BlogUser;
-import com.api.rest.controllers.UserController;
+import com.api.rest.controllers.UserController.UserController;
 import com.api.rest.repositories.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

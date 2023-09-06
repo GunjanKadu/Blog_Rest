@@ -1,12 +1,14 @@
-package com.api.rest.controllers;
+package com.api.rest.controllers.UserController;
 
 import com.api.rest.BlogUser;
 import com.api.rest.exceptions.ApiRequestException;
 import com.api.rest.interfaces.IUserController;
 import com.api.rest.interfaces.IUserService;
+import com.api.rest.util.GlobalInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,11 +45,18 @@ public class UserController implements IUserController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMe() {
+        BlogUser blogUser = GlobalInfo.getBlogUser();
+        UserResponse userResponse = new UserResponse(blogUser.getFirstName(), blogUser.getLastName(), blogUser.getEmail(), blogUser.getAge(), blogUser.getRole());
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<BlogUser> createUser(@RequestBody BlogUser user) {
         Optional<BlogUser> existingUser = userService.getUserByEmail(user.getUsername());
         if (existingUser != null && existingUser.isPresent()) {
-            throw new ApiRequestException(String.format("User with email %s already exists",existingUser.get().getUsername()));
+            throw new ApiRequestException(String.format("User with email %s already exists", existingUser.get().getUsername()));
         }
         BlogUser createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.OK);

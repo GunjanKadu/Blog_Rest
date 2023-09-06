@@ -1,17 +1,18 @@
-package com.api.rest.controllers.auth;
+package com.api.rest.controllers.UserController;
 
+import com.api.rest.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+@Data
+public class UserResponse {
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
+    private int age;
+    private Role role;
 }

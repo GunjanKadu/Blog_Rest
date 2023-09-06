@@ -1,4 +1,4 @@
-package com.api.rest.controllers.auth;
+package com.api.rest.controllers.AuthController;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -33,10 +33,10 @@ public class UserService implements IUserService {
     @Override
     public Optional<BlogUser> getUserByEmail(String email) {
         Optional<BlogUser> blogUser = userRepository.findByEmail(email);
-        if (blogUser.isPresent()) {
-            return blogUser;
-        }
-        return null;
+       if(blogUser.isPresent()){
+           return blogUser;
+       }
+       return null;
     }
 
 }

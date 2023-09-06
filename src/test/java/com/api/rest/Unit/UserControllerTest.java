@@ -1,7 +1,7 @@
 package com.api.rest.Unit;
 
 import com.api.rest.BlogUser;
-import com.api.rest.controllers.UserController;
+import com.api.rest.controllers.UserController.UserController;
 import com.api.rest.services.UserService;
 import org.assertj.core.api.Assertions;
 

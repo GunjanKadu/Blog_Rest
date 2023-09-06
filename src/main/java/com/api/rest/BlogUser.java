@@ -1,9 +1,9 @@
 package com.api.rest;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,10 +20,9 @@ import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@AllArgsConstructor(staticName = "build")
 @Entity
-@Data
+@Getter
 public class BlogUser implements UserDetails {
     @Id
     @GeneratedValue
