@@ -6,12 +6,15 @@ import com.api.rest.config.JwtService;
 import com.api.rest.controllers.AuthController.AuthenticationRequest;
 import com.api.rest.controllers.AuthController.AuthenticationResponse;
 import com.api.rest.controllers.AuthController.RegisterRequest;
+import com.api.rest.exceptions.ResourceExistsException;
 import com.api.rest.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,10 @@ public class AuthenticationService {
                 request.getAge(),
                 Role.USER);
 
+        Optional<BlogUser> existingUser = repository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+            throw new ResourceExistsException(String.format("%s is already registered", request.getEmail()));
+        }
         repository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
