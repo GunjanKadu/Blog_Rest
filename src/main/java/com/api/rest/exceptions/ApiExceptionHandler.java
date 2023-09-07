@@ -22,18 +22,20 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
     public ResponseEntity<Map<String, String>> handleMethodArgumentValidException(MethodArgumentNotValidException e) {
         Map<String, String> errorResponse = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(error -> {
-            errorResponse.put(error.getField(), error.getDefaultMessage());
-
-        });
+        e.getBindingResult().getFieldErrors().forEach(error -> errorResponse.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(value = { SignatureException.class })
-    public ResponseEntity<Map<String, String>> handleMethodArgumentValidException(SignatureException e) {
+    public ResponseEntity<Map<String, String>> handleSignatureException(SignatureException e) {
         Map<String, String> errorResponse = new HashMap<>();
-
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { ResourceExistsException.class })
+    public ResponseEntity<Object> handleResourceExistsException(ResourceExistsException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
