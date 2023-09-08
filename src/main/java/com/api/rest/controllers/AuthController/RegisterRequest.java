@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "Firstname Cannot be Null")
+    @NotBlank(message = "FirstName Cannot be Null")
     private String firstName;
 
     @NotBlank(message = "LastName Cannot be Null")

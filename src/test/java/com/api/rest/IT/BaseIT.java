@@ -1,5 +1,7 @@
 package com.api.rest.IT;
 
+import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +19,7 @@ public class BaseIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    public String baseUrl;
+    private String baseUrl;
 
     public int getPort() {
         return port;
@@ -30,6 +32,11 @@ public class BaseIT {
 
     public TestRestTemplate getRestTemplate() {
         return restTemplate;
+    }
+
+    @Test
+    public void baseTest(){
+        assertNotNull(restTemplate);
     }
 
 }
