@@ -3,6 +3,7 @@ package com.api.rest.exceptions;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +23,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
     public ResponseEntity<Map<String, String>> handleMethodArgumentValidException(MethodArgumentNotValidException e) {
         Map<String, String> errorResponse = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(error -> errorResponse.put(error.getField(), error.getDefaultMessage()));
+        e.getBindingResult().getFieldErrors()
+                .forEach(error -> errorResponse.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -37,5 +39,12 @@ public class ApiExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = { BadCredentialsException.class })
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

@@ -92,9 +92,8 @@ public class AuthControllerIT extends BaseIT {
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(email, password);
-
         // Then login
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(email, password);
         ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
         assertEquals(loginResponse.getStatusCode(), HttpStatus.OK);
 
@@ -108,4 +107,37 @@ public class AuthControllerIT extends BaseIT {
         assertTrue(token.length() > 100);
     }
 
+    @Test
+    public void userCannotLoginWithoutEmailorPassword(){
+        String email = "test3@gmail.com";
+        String password = "12345testuser";
+        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest("", "");
+        ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
+        assertEquals(loginResponse.getStatusCode(), HttpStatus.BAD_REQUEST);
+
+        Map<String, String> body = (Map<String, String>) loginResponse.getBody();
+
+        assertNotNull(body);
+        assertEquals(body.get("password"), "Password Cannot be Null");
+        assertEquals(body.get("email"), "must not be blank");
+    }
+
+    @Test
+    public void userCannotLoginWithIncorrectCredentials(){
+        String email = "test3@gmail.com";
+        String password = "12345testuser";
+        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest(email, "wrongPassword");
+        ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
+        assertEquals(loginResponse.getStatusCode(), HttpStatus.FORBIDDEN);
+
+        Map<String, String> body = (Map<String, String>) loginResponse.getBody();
+        assertEquals(body.get("error"), "Bad credentials");
+    }
 }

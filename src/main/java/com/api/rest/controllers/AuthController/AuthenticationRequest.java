@@ -15,8 +15,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class AuthenticationRequest {
     @Email(message = "Email Not valid")
-    @NotNull
+    @NotBlank
     private String email;
+
     @NotBlank(message = "Password Cannot be Null")
     private String password;
 }
