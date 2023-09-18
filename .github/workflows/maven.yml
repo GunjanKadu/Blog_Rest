@@ -33,12 +33,6 @@ jobs:
       - name: Build and Test with Maven
         run: mvn clean install
 
-      - name: Stop PostgreSQL container
-        run: docker stop REST_BLOG_DB_TEST
-
-      - name: Cleanup PostgreSQL container
-        run: docker rm REST_BLOG_DB_TEST
-
       - name: Generate Test Report
         run: mvn surefire-report:report-only
 
@@ -47,3 +41,10 @@ jobs:
         with:
           name: test-reports
           path: target/site/surefire-report
+
+      - name: Stop PostgreSQL container
+        run: docker stop REST_BLOG_DB_TEST
+
+      - name: Cleanup PostgreSQL container
+        run: docker rm REST_BLOG_DB_TEST
+
