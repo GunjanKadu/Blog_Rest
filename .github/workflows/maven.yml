@@ -39,7 +39,7 @@ jobs:
       - name: Cleanup PostgreSQL container
         run: docker rm REST_BLOG_DB_TEST
 
-      - name: Generate Test Reports
+      - name: Generate Test Report
         run: mvn surefire-report:report-only
 
       - name: Upload Test Reports
