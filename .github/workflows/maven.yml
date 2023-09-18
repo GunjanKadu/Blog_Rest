@@ -55,4 +55,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Display Test Reports
-        run:  ${{ github.workspace }}/test-reports
+        run:  test-reports
