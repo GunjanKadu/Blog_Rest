@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
-          path: target/site/surefire-report:report-only
+          path: $GITHUB_WORKSPACE/target/site/surefire-report:report-only
 
       - name: Stop PostgreSQL container
         run: docker stop REST_BLOG_DB_TEST
