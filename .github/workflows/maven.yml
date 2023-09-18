@@ -19,6 +19,16 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - ${{ secrets.DB_PORT }}:5432
+        options: --name  ${{ secrets.CONTAINER_NAME }}
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -27,10 +37,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Create Docker Container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: postgres:latest
-          options: -e POSTGRES_USER="myusernametest" -e POSTGRES_PASSWORD="mypasswordtest"
-      - name: Build with Maven
+      - name: Build and Test with Maven
         run: mvn clean install
+      - name: Stop PostgreSQL container
+        run: docker stop  ${{ secrets.CONTAINER_NAME }}
+      - name: Cleanup PostgreSQL container
+        run: docker rm  ${{ secrets.CONTAINER_NAME }}
