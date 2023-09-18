@@ -17,9 +17,8 @@
 
 
 https://www.youtube.com/watch?v=KxqlJblhzfI&ab_channel=Amigoscode
-// Concept of Roles 
-// JWT
-// Authentication
+// Add generics methods wherever possible in IT tests
+// Concept of Roles // Authorization
 // Logging
 // Admin can get all users -> change the security config file
 // GLobal exception handling 

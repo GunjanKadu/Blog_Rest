@@ -1,15 +1,10 @@
 package com.api.rest.config;
 
 import com.api.rest.BlogUser;
-import com.api.rest.exceptions.ApiExceptionHandler;
-import com.api.rest.exceptions.ApiRequestException;
 import com.api.rest.services.UserService;
 import com.api.rest.util.GlobalInfo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +12,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.Optional;
 
 @Component
@@ -35,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private static final String SIGNATURE_EXCEPTION = "SignatureException";
+    private static final String MALFORMED_JWT_EXCEPTION = "MalformedJwtException";
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -63,14 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     userByEmail.ifPresent(GlobalInfo::setBlogUser);
                 }
             }
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
-            if (e.getClass().getName().contains(SIGNATURE_EXCEPTION)) {
+            if (e.getClass().getName().contains(SIGNATURE_EXCEPTION) || e.getClass().getName().contains(MALFORMED_JWT_EXCEPTION)) {
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid Credentials");
             }
-            return;
         }
-        filterChain.doFilter(request, response);
     }
 }

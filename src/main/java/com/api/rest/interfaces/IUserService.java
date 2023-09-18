@@ -1,6 +1,8 @@
 package com.api.rest.interfaces;
 
 import com.api.rest.BlogUser;
+import com.api.rest.controllers.UserController.UserEditRequest;
+import com.api.rest.controllers.UserController.UserResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,8 @@ public interface IUserService {
 
     BlogUser createUser(BlogUser user);
     Optional<BlogUser> getUserByEmail(String email);
+
+    Optional<UserResponse> editUser(BlogUser user);
 
 
 }

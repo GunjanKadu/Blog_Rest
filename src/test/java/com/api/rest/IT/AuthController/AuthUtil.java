@@ -14,24 +14,24 @@ public class AuthUtil {
     private TestRestTemplate testRestTemplate;
     private String baseUrl;
 
-    public ResponseEntity<Object> registerUser(RegisterRequest request) {
+    public <RESP_T> ResponseEntity<RESP_T> registerUser(RegisterRequest request, Class<RESP_T> responseType) {
 
         String registerUrl = baseUrl + "/auth/register";
         HttpEntity<Object> requestEntity = new HttpEntity<>(request, null);
 
-        ResponseEntity<Object> response = testRestTemplate.exchange(registerUrl, HttpMethod.POST, requestEntity,
-                Object.class);
+        ResponseEntity<RESP_T> response = testRestTemplate.exchange(registerUrl, HttpMethod.POST, requestEntity,
+                responseType);
 
         return response;
     }
 
-    public ResponseEntity<Object> loginUser(AuthenticationRequest request) {
+    public <RESP_T> ResponseEntity<RESP_T> loginUser(AuthenticationRequest request, Class<RESP_T> responseType) {
 
         String loginUrl = baseUrl + "/auth/login";
         HttpEntity<Object> requestEntity = new HttpEntity<>(request, null);
 
-        ResponseEntity<Object> response = testRestTemplate.exchange(loginUrl, HttpMethod.POST, requestEntity,
-                Object.class);
+        ResponseEntity<RESP_T> response = testRestTemplate.exchange(loginUrl, HttpMethod.POST, requestEntity,
+                responseType);
 
         return response;
     }

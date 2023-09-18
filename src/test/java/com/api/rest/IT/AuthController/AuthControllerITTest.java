@@ -1,7 +1,8 @@
 package com.api.rest.IT.AuthController;
 
-import com.api.rest.IT.BaseIT;
+import com.api.rest.IT.BaseITTest;
 import com.api.rest.controllers.AuthController.AuthenticationRequest;
+import com.api.rest.controllers.AuthController.AuthenticationResponse;
 import com.api.rest.controllers.AuthController.RegisterRequest;
 import com.api.rest.repositories.UserRepository;
 import org.junit.After;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AuthControllerIT extends BaseIT {
+public class AuthControllerITTest extends BaseITTest {
 
     @Autowired
     private AuthUtil authUtil;
@@ -30,21 +32,23 @@ public class AuthControllerIT extends BaseIT {
         userRepository.deleteAll();
     }
 
-    private ResponseEntity<Object> registerUser(String firstName, String lastName, String email, String password,
-            int age) {
+    private <RESP_T> ResponseEntity<RESP_T> registerUser(String firstName, String lastName,
+            String email, String password,
+            int age, Class<RESP_T> responseType) {
         RegisterRequest registerRequest = new RegisterRequest(firstName, lastName, email, password, age);
-        ResponseEntity<Object> response = authUtil.registerUser(registerRequest);
+        ResponseEntity<RESP_T> response = authUtil.registerUser(registerRequest, responseType);
         return response;
     }
 
     @Test
     public void userCanRegisterSuccessfullyAndRecieveToken() {
-        ResponseEntity<Object> response = registerUser("Test", "User", "test@gmail.com", "12345testuser", 25);
+        ResponseEntity<AuthenticationResponse> response = registerUser("Test", "User", "test@gmail.com",
+                "12345testuser", 25, AuthenticationResponse.class);
 
-        Map<String, String> body = (Map<String, String>) response.getBody();
+        AuthenticationResponse body = response.getBody();
         assertNotNull(body);
 
-        String token = body.get("token");
+        String token = body.getToken();
         assertNotNull(token);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -56,11 +60,13 @@ public class AuthControllerIT extends BaseIT {
     public void userCannotRegisterIfAlreadyRegistered() {
         String email = "test1@gmail.com";
         //register user once
-        ResponseEntity<Object> response = registerUser("Test_1", "User_2", email, "12345testuser", 25);
+        ResponseEntity<AuthenticationResponse> response = registerUser("Test_1", "User_2", email, "12345testuser", 25,
+                AuthenticationResponse.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
         //Try to register with same email
-        ResponseEntity<Object> response_new = registerUser("Test_1", "User_2", email, "12345testuser", 25);
+        ResponseEntity<Map> response_new = registerUser("Test_1", "User_2", email, "12345testuser",
+                25, Map.class);
 
         Map<String, String> body_new = (Map<String, String>) response_new.getBody();
         assertNotNull(body_new);
@@ -71,10 +77,11 @@ public class AuthControllerIT extends BaseIT {
 
     @Test
     public void userCannotRegisterWithIncorrectRequestBody() {
-        ResponseEntity<Object> response = registerUser("", "", "test", "12345testuser", 15);
+        ResponseEntity<Object> response = registerUser("", "", "test", "12345testuser", 15,
+                Object.class);
 
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
-        Map<String, String> body = (Map<String, String>) response.getBody();
+        HashMap<String, String> body = (HashMap<String, String>) response.getBody();
 
         assertNotNull(body);
         assertEquals(body.get("firstName"), "FirstName Cannot be Null");
@@ -88,19 +95,19 @@ public class AuthControllerIT extends BaseIT {
         // Register user first
         String email = "test2@gmail.com";
         String password = "12345testuser";
-        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25);
+        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25, Object.class);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
         // Then login
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(email, password);
-        ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
+        ResponseEntity<AuthenticationResponse> loginResponse = authUtil.loginUser(authenticationRequest,
+                AuthenticationResponse.class);
         assertEquals(loginResponse.getStatusCode(), HttpStatus.OK);
 
-        Map<String, String> body = (Map<String, String>) loginResponse.getBody();
-        assertNotNull(body);
+        assertNotNull(loginResponse.getBody());
 
-        String token = body.get("token");
+        String token = loginResponse.getBody().getToken();
         assertNotNull(token);
 
         assertFalse(token.isEmpty());
@@ -108,36 +115,34 @@ public class AuthControllerIT extends BaseIT {
     }
 
     @Test
-    public void userCannotLoginWithoutEmailorPassword(){
+    public void userCannotLoginWithoutEmailorPassword() {
         String email = "test3@gmail.com";
         String password = "12345testuser";
-        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25);
+        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25, Object.class);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest("", "");
-        ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
+        ResponseEntity<AuthenticationRequest> loginResponse = authUtil.loginUser(authenticationRequest,
+                AuthenticationRequest.class);
         assertEquals(loginResponse.getStatusCode(), HttpStatus.BAD_REQUEST);
 
-        Map<String, String> body = (Map<String, String>) loginResponse.getBody();
-
-        assertNotNull(body);
-        assertEquals(body.get("password"), "Password Cannot be Null");
-        assertEquals(body.get("email"), "must not be blank");
+        assertNotNull(loginResponse.getBody());
+        assertEquals(loginResponse.getBody().getPassword(), "Password Cannot be Null");
+        assertEquals(loginResponse.getBody().getEmail(), "must not be blank");
     }
 
     @Test
-    public void userCannotLoginWithIncorrectCredentials(){
+    public void userCannotLoginWithIncorrectCredentials() {
         String email = "test3@gmail.com";
         String password = "12345testuser";
-        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25);
+        ResponseEntity<Object> response = registerUser("Test", "User_2", email, password, 25, Object.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(email, "wrongPassword");
-        ResponseEntity<Object> loginResponse = authUtil.loginUser(authenticationRequest);
+        ResponseEntity<Map> loginResponse = authUtil.loginUser(authenticationRequest, Map.class);
         assertEquals(loginResponse.getStatusCode(), HttpStatus.FORBIDDEN);
 
-        Map<String, String> body = (Map<String, String>) loginResponse.getBody();
-        assertEquals(body.get("error"), "Bad credentials");
+        assertEquals(loginResponse.getBody().get("error"), "Bad credentials");
     }
 }
