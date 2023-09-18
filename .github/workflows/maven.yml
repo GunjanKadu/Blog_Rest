@@ -29,9 +29,21 @@ jobs:
           cache: maven
       - name: Set up PostgreSQL Docker Container
         run: docker run --name REST_BLOG_DB_TEST -e POSTGRES_USER=myusernametest -e POSTGRES_PASSWORD=mypasswordtest -p 3001:5432 -d postgres
+
       - name: Build and Test with Maven
         run: mvn clean install
+
       - name: Stop PostgreSQL container
         run: docker stop REST_BLOG_DB_TEST
+
       - name: Cleanup PostgreSQL container
         run: docker rm REST_BLOG_DB_TEST
+
+      - name: Generate Test Reports
+        run: mvn surefire-report:report-only
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: target/site/surefire-report
