@@ -48,3 +48,14 @@ jobs:
       - name: Cleanup PostgreSQL container
         run: docker rm REST_BLOG_DB_TEST
 
+  show-reports:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Display Test Reports
+        run: |
+          cat $GITHUB_WORKSPACE/target/site/surefire-report.html
