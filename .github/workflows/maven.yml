@@ -56,4 +56,4 @@ jobs:
 
       - name: Display Test Reports
         run: |
-          cat $GITHUB_WORKSPACE/test-reports
+          cat test-reports
