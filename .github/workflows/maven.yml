@@ -19,16 +19,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: myusernametest
-          POSTGRES_PASSWORD: mypasswordtest
-        ports:
-          - 3001:5432
-        options: --name REST_BLOG_DB_TEST
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -37,6 +27,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Set up PostgreSQL Docker Container
+        run: docker run --name REST_BLOG_DB_TEST -e POSTGRES_USER=myusernametest -e POSTGRES_PASSWORD=mypasswordtest -p 3001:5432 -d postgres
       - name: Build and Test with Maven
         run: mvn clean install
       - name: Stop PostgreSQL container
