@@ -15,7 +15,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  Build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
       - name: Test
         run: mvn clean install
 
-      - name: Test-Report
+      - name: test-report
         uses: dorny/test-reporter@v1
         if: always()
         with:
