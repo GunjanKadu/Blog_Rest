@@ -25,7 +25,6 @@ public class UserController implements IUserController {
         this.userService = userService;
     }
 
-
     @GetMapping()
     public ResponseEntity<UserResponse> getMe() {
         BlogUser blogUser = GlobalInfo.getBlogUser();
@@ -37,9 +36,8 @@ public class UserController implements IUserController {
     // Edit User Details
     @PatchMapping()
     public ResponseEntity<UserResponse> editMe(@RequestBody BlogUser blogUser) {
-        Optional<UserResponse> userResponse = userService.editUser(blogUser);
-
-        return null;
+        UserResponse userResponse = userService.editUser(blogUser);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
 }
