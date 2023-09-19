@@ -37,11 +37,6 @@ jobs:
       - name: Cleanup PostgreSQL container
         run: docker rm REST_BLOG_DB_TEST
 
-  show-reports:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Report
         uses: dorny/test-reporter@v1
         if: always()
