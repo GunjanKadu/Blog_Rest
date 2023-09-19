@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Rest_Blog_Project
+name: CI_Build_Test
 
 on:
   push:
@@ -28,18 +28,18 @@ jobs:
       - name: Set up PostgreSQL Docker Container
         run: docker run --name REST_BLOG_DB_TEST -e POSTGRES_USER=myusernametest -e POSTGRES_PASSWORD=mypasswordtest -p 3001:5432 -d postgres
 
-      - name: Build and Test with Maven
+      - name: Build
+        run: mvn clean install -DskipTests
+
+      - name: Test
         run: mvn clean install
 
-      - name: Generate Test Report
-        run: mvn surefire-report:report
-
-      - name: Report
+      - name: Test-Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: Maven Tests
-          path: target/site/*.html
+          path: target/surefire-reports/*.xml
           reporter: java-junit
           fail-on-error: true
 
