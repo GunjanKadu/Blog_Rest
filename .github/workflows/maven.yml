@@ -31,17 +31,26 @@ jobs:
       - name: Build and Test with Maven
         run: mvn clean install
 
-      - name: Stop PostgreSQL container
-        run: docker stop REST_BLOG_DB_TEST
-
-      - name: Cleanup PostgreSQL container
-        run: docker rm REST_BLOG_DB_TEST
+      - name: Generate Test Report
+        run: mvn surefire-report:report
 
       - name: Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
           name: Maven Tests
-          path: target/surefire-reports/*.xml
+          path: target/site/*.html
           reporter: java-junit
           fail-on-error: true
+
+      - name: Stop PostgreSQL container
+        run: docker stop REST_BLOG_DB_TEST
+
+      - name: Cleanup PostgreSQL container
+        run: docker rm REST_BLOG_DB_TEST
+
+  show-reports:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
