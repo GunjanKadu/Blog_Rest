@@ -31,15 +31,6 @@ jobs:
       - name: Build and Test with Maven
         run: mvn clean install
 
-      - name: Generate Test Report
-        run: mvn surefire-report:report
-
-      - name: Upload Test Reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-reports
-          path: target/site/surefire-report
-
       - name: Stop PostgreSQL container
         run: docker stop REST_BLOG_DB_TEST
 
