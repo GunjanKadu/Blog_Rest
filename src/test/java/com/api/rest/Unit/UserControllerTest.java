@@ -55,7 +55,7 @@ public class UserControllerTest {
         assertEquals(body.getEmail(), blogUser.getEmail());
         assertEquals(body.getFirstName(), blogUser.getFirstName());
         assertEquals(body.getLastName(), blogUser.getLastName());
-        assertEquals(body.getRole(), "blogUser.getRole()");
+        assertEquals(body.getRole(), blogUser.getRole());
     }
 
 }
