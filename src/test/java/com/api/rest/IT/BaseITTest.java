@@ -1,13 +1,14 @@
 package com.api.rest.IT;
 
 import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -17,8 +18,7 @@ public class BaseITTest {
     public int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
-
+    private TestRestTemplate testRestTemplate;
     private String baseUrl;
 
     public int getPort() {
@@ -30,13 +30,13 @@ public class BaseITTest {
         return this.baseUrl;
     }
 
-    public TestRestTemplate getRestTemplate() {
-        return restTemplate;
+    public TestRestTemplate getTestRestTemplate() {
+        return testRestTemplate;
     }
 
     @Test
-    public void baseTest(){
-        assertNotNull(restTemplate);
+    public void baseTest() {
+        assertNotNull(testRestTemplate);
     }
 
 }

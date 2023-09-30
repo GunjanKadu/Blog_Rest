@@ -22,13 +22,13 @@ public class TestConfig {
     @Bean
     public AuthUtil authUtil() {
         BaseITTest baseIT = baseIT();
-        return new AuthUtil(baseIT.getRestTemplate(), baseIT().getBaseUrl());
+        return new AuthUtil(baseIT.getTestRestTemplate(), baseIT().getBaseUrl());
     }
 
     @Bean
     public UserUtil userUtil() {
         BaseITTest baseIT = baseIT();
-        return new UserUtil(baseIT.getRestTemplate(), baseIT.getBaseUrl());
+        return new UserUtil(baseIT.getTestRestTemplate(), baseIT.getBaseUrl());
     }
 
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -63,7 +64,7 @@ public class UserService implements IUserService {
 
         optionalUserFromDB.ifPresent(userFromDB -> {
             if (user.getEmail() != null && !user.getEmail().isEmpty() && !user.getEmail()
-                    .equals(userFromDB.getEmail())) {
+                    .equals(userFromDB.getEmail()) && isEmailValid(user.getEmail())) {
                 userFromDB.setEmail(user.getEmail());
             }
             if (user.getFirstName() != null && !user.getFirstName().isEmpty() && !user.getFirstName()
@@ -91,6 +92,18 @@ public class UserService implements IUserService {
         });
 
         return userResponse;
+    }
+
+    public boolean isEmailValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 
 }
