@@ -59,15 +59,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            if (e.getClass().getName().contains(SIGNATURE_EXCEPTION) || e.getClass().getName()
-                    .contains(MALFORMED_JWT_EXCEPTION)) {
+            if (e.getClass().getName().contains(SIGNATURE_EXCEPTION) || e.getClass().getName().contains(MALFORMED_JWT_EXCEPTION)) {
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid Credentials");
-            } else {
-                response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write(e.getMessage());
             }
         }
     }

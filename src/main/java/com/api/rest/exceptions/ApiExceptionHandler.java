@@ -41,14 +41,6 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(value = { ResourceDoesNotExistsException.class })
-    public ResponseEntity<Object> handleResourceDoesNotExistsException(ResourceDoesNotExistsException e) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
-
     @ExceptionHandler(value = { BadCredentialsException.class })
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException e) {
         Map<String, String> error = new HashMap<>();

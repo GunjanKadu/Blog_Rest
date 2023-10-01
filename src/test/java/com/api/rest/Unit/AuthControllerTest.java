@@ -1,4 +1,4 @@
-package com.api.rest.Unit.Controllers;
+package com.api.rest.Unit;
 
 import com.api.rest.controllers.AuthController.AuthController;
 import com.api.rest.controllers.AuthController.AuthenticationRequest;

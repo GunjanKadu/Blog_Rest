@@ -1,32 +1,22 @@
 package com.api.rest.services;
 
-import com.api.rest.Role;
-
 import com.api.rest.BlogUser;
-import com.api.rest.controllers.AuthController.RegisterRequest;
+import com.api.rest.controllers.UserController.UserEditRequest;
 import com.api.rest.controllers.UserController.UserResponse;
-import com.api.rest.exceptions.ResourceDoesNotExistsException;
 import com.api.rest.exceptions.ResourceExistsException;
 import com.api.rest.interfaces.IUserService;
 import com.api.rest.repositories.UserRepository;
-import com.api.rest.util.GlobalInfo;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
 public class UserService implements IUserService {
 
+    @Autowired
     private UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<BlogUser> getUsers() {
@@ -53,57 +43,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponse editUser(BlogUser user) {
-        Optional<BlogUser> optionalUserFromDB = userRepository.findByEmail(GlobalInfo.getBlogUser().getEmail());
-
-        UserResponse userResponse = new UserResponse();
-
-        if (optionalUserFromDB.isEmpty()) {
-            throw new ResourceDoesNotExistsException(String.format("%s does not exist", user.getEmail()));
+    public Optional<UserResponse> editUser(BlogUser user) {
+        Optional<BlogUser> userFromDB = userRepository.findByEmail(user.getEmail());
+        if (userFromDB.isEmpty()) {
+            throw new ResourceExistsException(String.format("%s does not exists", user.getEmail()));
         }
 
-        optionalUserFromDB.ifPresent(userFromDB -> {
-            if (user.getEmail() != null && !user.getEmail().isEmpty() && !user.getEmail()
-                    .equals(userFromDB.getEmail()) && isEmailValid(user.getEmail())) {
-                userFromDB.setEmail(user.getEmail());
-            }
-            if (user.getFirstName() != null && !user.getFirstName().isEmpty() && !user.getFirstName()
-                    .equals(userFromDB.getFirstName())) {
-                userFromDB.setFirstName(user.getFirstName());
-            }
-            if (user.getLastName() != null && !user.getLastName().isEmpty() && !user.getLastName()
-                    .equals(userFromDB.getLastName())) {
-                userFromDB.setLastName(user.getLastName());
-            }
-            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-                String encodedPassword = passwordEncoder.encode(user.getPassword());
-                userFromDB.setPassword(encodedPassword);
-            }
-            if (user.getAge() > RegisterRequest.MINIMUM_AGE && user.getAge() < RegisterRequest.MAXIMUM_AGE) {
-                userFromDB.setAge(user.getAge());
-            }
 
-            BlogUser updatedUser = userRepository.save(userFromDB);
-            userResponse.setFirstName(updatedUser.getFirstName());
-            userResponse.setLastName(updatedUser.getLastName());
-            userResponse.setEmail(updatedUser.getEmail());
-            userResponse.setAge(updatedUser.getAge());
-            userResponse.setRole(updatedUser.getRole());
-        });
-
-        return userResponse;
-    }
-
-    public boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pat.matcher(email).matches();
+        return Optional.empty();
     }
 
 }
