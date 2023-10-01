@@ -16,6 +16,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+    public static final int MINIMUM_AGE = 18;
+    public static final int MAXIMUM_AGE = 65;
+
     @NotBlank(message = "FirstName Cannot be Null")
     private String firstName;
 
@@ -29,7 +32,7 @@ public class RegisterRequest {
     @NotNull(message = "Password Cannot be Null")
     private String password;
 
-    @Min(18)
-    @Max(65)
+    @Min(MINIMUM_AGE)
+    @Max(MAXIMUM_AGE)
     private Integer age;
 }

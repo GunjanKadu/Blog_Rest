@@ -16,7 +16,7 @@ public interface IUserService {
     BlogUser createUser(BlogUser user);
     Optional<BlogUser> getUserByEmail(String email);
 
-    Optional<UserResponse> editUser(BlogUser user);
+    UserResponse editUser(BlogUser user);
 
 
 }

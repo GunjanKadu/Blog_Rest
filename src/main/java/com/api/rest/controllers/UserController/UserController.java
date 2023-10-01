@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/users/me")
 public class UserController implements IUserController {
@@ -24,7 +22,6 @@ public class UserController implements IUserController {
     public UserController(@Autowired IUserService userService) {
         this.userService = userService;
     }
-
 
     @GetMapping()
     public ResponseEntity<UserResponse> getMe() {
@@ -37,9 +34,8 @@ public class UserController implements IUserController {
     // Edit User Details
     @PatchMapping()
     public ResponseEntity<UserResponse> editMe(@RequestBody BlogUser blogUser) {
-        Optional<UserResponse> userResponse = userService.editUser(blogUser);
-
-        return null;
+        UserResponse userResponse = userService.editUser(blogUser);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
 }
