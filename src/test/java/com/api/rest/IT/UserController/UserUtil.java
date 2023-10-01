@@ -12,20 +12,17 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 @AllArgsConstructor
-
 public class UserUtil {
 
     private TestRestTemplate testRestTemplate;
-
     private String baseUrl;
+    private HttpClient httpClient;
 
     public <RESP_T> ResponseEntity<RESP_T> getMe(String token, Class<RESP_T> responseType) {
         String url = this.baseUrl + "users/me";
@@ -53,7 +50,6 @@ public class UserUtil {
         String requestBodyString = objectMapper.writeValueAsString(blogUserRequestBody);
         StringEntity entity = new StringEntity(requestBodyString);
 
-        HttpClient httpClient = HttpClients.createDefault();
         HttpPatch httpPatch = new HttpPatch(url);
         httpPatch.addHeader("Content-Type", "application/json");
         httpPatch.addHeader("Authorization", "Bearer " + token);

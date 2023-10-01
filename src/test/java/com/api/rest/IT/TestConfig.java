@@ -2,12 +2,16 @@ package com.api.rest.IT;
 
 import com.api.rest.IT.AuthController.AuthUtil;
 import com.api.rest.IT.UserController.UserUtil;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestConfig {
+
+    private final HttpClient httpClient = HttpClients.createDefault();
 
     @Bean
     public TestRestTemplate getTestRestTemplate() {
@@ -28,7 +32,7 @@ public class TestConfig {
     @Bean
     public UserUtil userUtil() {
         BaseITTest baseIT = baseIT();
-        return new UserUtil(baseIT.getTestRestTemplate(), baseIT.getBaseUrl());
+        return new UserUtil(baseIT.getTestRestTemplate(), baseIT.getBaseUrl(), httpClient);
     }
 
 }
